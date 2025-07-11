@@ -1,0 +1,274 @@
+const express = require('express');
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+const path = require('path');
+
+const app = express();
+const port = 3000;
+
+app.use(express.json());
+
+// Função para extrair números de WhatsApp de uma página (se necessário)
+async function extrairNumerosWhatsApp(url) {
+    console.log('🌐 Iniciando extração para URL:', url);
+    const browser = await puppeteer.launch({
+        headless: "new",
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    const page = await browser.newPage();
+    
+    try {
+        console.log('⏳ Aguardando carregamento da página...');
+        await page.goto(url, { 
+            waitUntil: 'networkidle0', 
+            timeout: 30000 
+        });
+        
+        console.log('🔍 Buscando números na página...');
+        const numeros = await page.evaluate(() => {
+            const regex = /(?:\+55|55)?(?:\s|-)?\(?[1-9]{2}\)?(?:\s|-)?(?:9\s?)?\d{4}(?:\s|-)?\d{4}/g;
+            const conteudo = document.body.innerText;
+            return [...new Set(conteudo.match(regex) || [])];
+        });
+
+        console.log(`✅ Encontrados ${numeros.length} números nesta página`);
+        await browser.close();
+        return numeros;
+    } catch (error) {
+        console.error('❌ Erro durante extração:', error.message);
+        await browser.close();
+        return [];
+    }
+}
+
+// Rota para realizar a busca no Google Maps e extrair números
+app.post('/buscar-whatsapp', async (req, res) => {
+    try {
+        const { termo_busca, quantidade = 50 } = req.body;
+        console.log('🔍 Iniciando busca para:', termo_busca, 'Quantidade desejada:', quantidade);
+
+        console.log('🌐 Iniciando navegador Puppeteer...');
+        const browser = await puppeteer.launch({
+            headless: true,
+            defaultViewport: null,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--start-maximized'
+            ]
+        });
+        const page = await browser.newPage();
+
+        await page.setViewport({ width: 1366, height: 768 });
+
+        const googleUrl = `https://www.google.com/maps/search/${encodeURIComponent(termo_busca)}?hl=pt-BR`;
+        console.log('🗺️ Acessando Google Maps:', googleUrl);
+        await page.goto(googleUrl);
+
+        await page.waitForSelector('.m6QErb.DxyBCb.kA9KIf.dS8AEf.XiKgde.ecceSd', { timeout: 60000 });
+        
+        console.log('📜 Rolando página para carregar todos os resultados...');
+        await page.evaluate(async (quantidadeDesejada) => {
+            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            
+            async function autoScroll(targetCount) {
+                const scrollableDiv = document.querySelector('div[role="feed"]');
+                if (!scrollableDiv) return;
+
+                let lastHeight = scrollableDiv.scrollHeight;
+                let currentItems = 0;
+                
+                while (true) {
+                    currentItems = document.querySelectorAll('.Nv2PK.THOPZb.CpccDe').length;
+                    
+                    // Parar exatamente quando atingir a quantidade desejada
+                    if (currentItems >= targetCount) {
+                        console.log(`Meta atingida: ${currentItems}/${targetCount} items`);
+                        break;
+                    }
+
+                    scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
+                    await sleep(1000);
+
+                    if (scrollableDiv.scrollHeight === lastHeight) {
+                        await sleep(2000);
+                        if (scrollableDiv.scrollHeight === lastHeight) break;
+                    }
+                    lastHeight = scrollableDiv.scrollHeight;
+                }
+            }
+
+            await autoScroll(quantidadeDesejada);
+        }, quantidade);
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        console.log('📍 Coletando informações dos estabelecimentos...');
+        const estabelecimentos = await page.evaluate((quantidadeDesejada) => {
+            const results = [];
+            const items = document.querySelectorAll('.Nv2PK.THOPZb.CpccDe');
+            
+            // Limitar ao número exato de itens solicitados
+            const itemsToProcess = Math.min(items.length, quantidadeDesejada);
+            
+            for (let i = 0; i < itemsToProcess; i++) {
+                const item = items[i];
+                try {
+                    const nomeEmpresa = item.querySelector('.qBF1Pd')?.textContent?.trim() || '';
+                    const avaliacaoElement = item.querySelector('.MW4etd');
+                    const reviewsElement = item.querySelector('.UY7F9');
+                    const avaliacao = avaliacaoElement ? avaliacaoElement.textContent : '';
+                    const reviews = reviewsElement ? reviewsElement.textContent.replace(/[()]/g, '') : '';
+                    const endereco = item.querySelector('.W4Efsd span:last-child')?.textContent?.trim() || '';
+                    const horarioElement = item.querySelector('.W4Efsd span span[style*="color: rgba(25,134,57,1.00)"]');
+                    const horarioComplemento = horarioElement?.nextElementSibling?.textContent || '';
+                    const horario = (horarioElement ? horarioElement.textContent : '') + horarioComplemento;
+                    const link = item.querySelector('a.hfpxzc')?.href || '';
+
+                    results.push({
+                        nome: nomeEmpresa,
+                        avaliacao: avaliacao,
+                        reviews: reviews,
+                        endereco: endereco,
+                        horario: horario,
+                        link: link
+                    });
+                    console.log(`Processing item ${i + 1}`);
+                } catch (error) {
+                    console.error(`Error processing item ${i + 1}:`, error);
+                }
+            }
+            return results;
+        }, quantidade);
+
+        console.log(`📊 Encontrados ${estabelecimentos.length} estabelecimentos. Coletando telefones...`);
+
+        for (let estabelecimento of estabelecimentos) {
+            try {
+                if (estabelecimento.link) {
+                    await page.goto(estabelecimento.link);
+                    
+                    try {
+                        console.log(`🔍 Tentando coletar dados de ${estabelecimento.nome}...`);
+                        
+                        const timeout = 10000; 
+                        const waitTime = 1000; 
+
+                        await Promise.all([
+                            page.waitForSelector('h1.DUwDvf.lfPIob', { timeout }),
+                            page.waitForSelector('.Io6YTe.fontBodyMedium.kR99db.fdkmkc', { timeout })
+                        ]).catch(e => console.log('⚠️ Alguns elementos não foram encontrados:', e.message));
+                        
+                        await new Promise(resolve => setTimeout(resolve, waitTime));
+                        
+                        const dadosDetalhados = await page.evaluate(() => {
+                            const nomeElement = document.querySelector('h1.DUwDvf.lfPIob');
+                            const nome = nomeElement ? nomeElement.textContent.trim() : '';
+                            const telefoneElement = document.querySelector('button.CsEnBe[data-item-id^="phone:tel"]');
+                            const telefone = telefoneElement ? 
+                                telefoneElement.getAttribute('aria-label').replace('Telefone: ', '').trim() : '';
+                            const enderecoElement = document.querySelector('button.CsEnBe[data-item-id="address"]');
+                            const endereco = enderecoElement ? 
+                                enderecoElement.getAttribute('aria-label').replace('Endereço: ', '').trim() : '';
+                            const websiteElement = document.querySelector('a.CsEnBe[data-item-id="authority"]');
+                            const website = websiteElement ? websiteElement.href : '';
+                            const horarioElement = document.querySelector('.o0Svhf .ZDu9vd span');
+                            const horario = horarioElement ? horarioElement.textContent.trim() : '';
+                            const avaliacaoElement = document.querySelector('.F7nice span[aria-hidden="true"]');
+                            const avaliacao = avaliacaoElement ? avaliacaoElement.textContent.trim() : '';
+                            const numAvaliacoesElement = document.querySelector('.F7nice span[aria-label*="avaliações"]');
+                            const numAvaliacoes = numAvaliacoesElement ? 
+                                numAvaliacoesElement.getAttribute('aria-label').match(/\d+/)[0] : '';
+                            const categoriaElement = document.querySelector('button.DkEaL');
+                            const categoria = categoriaElement ? categoriaElement.textContent.trim() : '';
+
+                            return {
+                                nome,
+                                telefone,
+                                endereco,
+                                website,
+                                horario,
+                                avaliacao,
+                                numAvaliacoes,
+                                categoria
+                            };
+                        });
+
+                        if (dadosDetalhados.nome) {
+                            Object.assign(estabelecimento, dadosDetalhados);
+                        }
+
+                    } catch (error) {
+                        console.log(`⚠️ Erro ao coletar dados principais:`, error.message);
+                        console.log(`⚠️ Tentando método alternativo para ${estabelecimento.nome}...`);
+                        
+                        try {
+                            await new Promise(resolve => setTimeout(resolve, 8000));
+                            
+                            const dadosAlternativos = await page.evaluate(() => {
+                                const content = document.body.textContent;
+                                const patterns = [
+                                    /\(71\)\s*9?\d{4}[-\s]?\d{4}/g,
+                                    /71\s*9?\d{4}[-\s]?\d{4}/g,
+                                    /\d{5}[-\s]?\d{4}/g
+                                ];
+                                
+                                for (let pattern of patterns) {
+                                    const matches = content.match(pattern);
+                                    if (matches) {
+                                        return matches[0].replace(/[^0-9]/g, '');
+                                    }
+                                }
+                                
+                                return '';
+                            });
+
+                            if (dadosAlternativos) {
+                                estabelecimento.telefone = dadosAlternativos;
+                                console.log(`✅ Telefone encontrado (método alternativo) para ${estabelecimento.nome}: ${dadosAlternativos}`);
+                            }
+                        } catch (altError) {
+                            console.error(`❌ Erro no método alternativo:`, altError.message);
+                        }
+                    }
+
+                    console.log('⏳ Aguardando antes de próxima requisição...');
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+            } catch (error) {
+                console.error(`❌ Erro ao coletar dados para ${estabelecimento.nome}:`, error);
+                continue;
+            }
+        }
+
+        const resultados = {
+            termo_busca,
+            numeros: estabelecimentos.map(est => est.telefone).filter(tel => tel),
+            estabelecimentos: estabelecimentos,
+            data_busca: new Date().toISOString()
+        };
+
+        try {
+            const jsonPath = path.join(__dirname, 'json.json');
+            fs.writeFileSync(
+                jsonPath,
+                JSON.stringify(resultados, null, 2)
+            );
+            console.log('✅ Resultados salvos com sucesso!');
+        } catch (error) {
+            console.error('❌ Erro ao salvar arquivo JSON:', error);
+        }
+
+        console.log('✨ Processo finalizado com sucesso!');
+        await browser.close();
+        res.json(resultados);
+
+    } catch (error) {
+        console.error('🚨 Erro crítico:', error);
+        res.status(500).json({ erro: error.message });
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}`);
+});

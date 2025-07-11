@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Busca WhatsApp Empresas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8fafc; min-height: 100vh; }
+        .login-container {
+            margin-top: 12vh;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 3rem 2rem 2rem 2rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2 class="mb-4">Login</h2>
+        <form id="loginForm">
+            <div class="mb-3">
+                <input type="text" class="form-control form-control-lg" id="username" placeholder="Usuário ou E-mail" required autofocus>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control form-control-lg" id="password" placeholder="Senha" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg w-100">Entrar</button>
+        </form>
+        <div id="loginError" class="alert alert-danger mt-3" style="display:none;"></div>
+        <div class="mt-3 text-center">
+            <a href="/register.html">Não possui cadastro? Cadastre-se</a>
+        </div>
+    </div>
+    <script>
+        document.getElementById('loginForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            try {
+                console.log('Enviando requisição de login para /login');
+                const res = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                console.log('Resposta da API:', data);
+                
+                if (data.success) {
+                    console.log('Login bem-sucedido. Token recebido:', data.token);
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('username', username);
+                    console.log('Token armazenado no localStorage:', localStorage.getItem('token'));
+                    console.log('Redirecionando para /index.html');
+                    window.location.href = '/index.html';
+                } else {
+                    console.error('Erro no login:', data.message);
+                    document.getElementById('loginError').textContent = data.message || 'Usuário, e-mail ou senha inválidos.';
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Erro ao processar login:', error);
+                document.getElementById('loginError').textContent = 'Erro ao conectar ao servidor. Tente novamente mais tarde.';
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

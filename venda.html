@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venda - Ferramenta de Prospecção WhatsApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #4285F4 0%, #34a853 100%);
+            min-height: 100vh;
+            color: #222;
+        }
+        .hero {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            margin: 48px auto 24px auto;
+            max-width: 700px;
+            padding: 3rem 2.5rem 2.5rem 2.5rem;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #4285F4;
+        }
+        .hero .subtitle {
+            font-size: 1.3em;
+            color: #222;
+            margin-bottom: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .gatilhos {
+            margin: 2rem 0 2.5rem 0;
+            text-align: left;
+        }
+        .gatilhos li {
+            font-size: 1.12em;
+            margin-bottom: 0.7em;
+            list-style: none;
+            position: relative;
+            padding-left: 1.6em;
+        }
+        .gatilhos li:before {
+            content: '\f058';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            color: #34a853;
+            position: absolute;
+            left: 0;
+        }
+        .preco-card {
+            background: #f8fafc;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px rgba(66,133,244,0.07);
+            padding: 2rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .preco-card h3 {
+            color: #34a853;
+            font-weight: 700;
+            font-size: 2em;
+        }
+        .btn-lg {
+            font-size: 1.3em;
+            padding: 0.85em 2.5em;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg,#4285F4,#34a853);
+            border: none;
+        }
+        .btn-outline-success {
+            border: 2px solid #34a853;
+        }
+        .badge-creditos {
+            background: #34a853;
+            font-size: 1em;
+            padding: 0.5em 1.2em;
+            border-radius: 2em;
+            margin-left: 0.5em;
+        }
+        .creditos-info {
+            color: #555;
+            font-size: 1.08em;
+        }
+        .cta-btns {
+            margin-top: 2rem;
+        }
+        .cta-btns .btn {
+            margin: 0 0.5em 0.5em 0.5em;
+        }
+        @media (max-width: 600px) {
+            .hero { padding: 1.2rem 0.4rem; }
+            .preco-card { padding: 1.2rem 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero animate__animated animate__fadeInDown">
+        <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_272x92dp.png" width="160" class="mb-3 animate__animated animate__bounceInDown animate__delay-1s" alt="Logo Google">
+        <h1 class="animate__animated animate__fadeInUp animate__delay-1s">Aumente Suas Vendas com Leads Qualificados!</h1>
+        <div class="ratio ratio-16x9 mb-3 animate__animated animate__fadeIn animate__delay-1s">
+            <iframe src="https://www.youtube.com/embed/2e6Qp3Uj1gQ" title="Como funciona a ferramenta de prospecção" allowfullscreen></iframe>
+        </div>
+        <div class="subtitle animate__animated animate__fadeInUp animate__delay-2s">
+            A ferramenta definitiva para quem trabalha com prospecção, vendas ativas e cold calls.<br>
+            Extraia listas de empresas direto do Google, com telefone, nome e endereço para contato via WhatsApp.
+        </div>
+        <div class="alert alert-danger fw-bold animate__animated animate__headShake animate__infinite animate__delay-2s mb-2" style="font-size:1.13em;">Promoção especial: créditos com desconto por tempo limitado!</div>
+        <div class="alert alert-warning fw-bold animate__animated animate__flash animate__infinite animate__delay-3s mb-4" style="font-size:1.08em;">
+            <i class="fas fa-hourglass-half me-2"></i>Restam apenas <span class="text-danger">12 vagas promocionais!</span>
+        </div>
+        <ul class="gatilhos animate__animated animate__fadeInLeft animate__delay-2s">
+            <li><b>Leads quentes e atualizados</b> direto do Google</li>
+            <li>Ideal para <b>agências, representantes, consultores e vendedores</b></li>
+            <li>Economize tempo: <b>prospecção automática</b> em poucos cliques</li>
+            <li>Mais conversão: <b>abordagem certeira</b> com contatos verificados</li>
+            <li>Funciona para <b>qualquer nicho e cidade</b> do Brasil</li>
+            <li><b>Sem mensalidade</b>: pague só pelo que usar</li>
+            <li>Plataforma simples, rápida e 100% online</li>
+        </ul>
+        <section class="como-funciona animate__animated animate__fadeInUp animate__delay-3s mb-5">
+            <h2 class="fw-bold mb-3 text-success"><i class="fas fa-bolt me-2"></i>Como funciona?</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center p-3">
+                        <div class="display-3 mb-2 text-primary"><i class="fas fa-city"></i></div>
+                        <div class="fw-bold">Escolha a cidade e o nicho</div>
+                        <div class="small text-muted">Ex: pizzaria em Belo Horizonte</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center p-3">
+                        <div class="display-3 mb-2 text-success"><i class="fas fa-search"></i></div>
+                        <div class="fw-bold">Clique em pesquisar</div>
+                        <div class="small text-muted">O sistema busca empresas qualificadas no Google</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center p-3">
+                        <div class="display-3 mb-2 text-warning"><i class="fab fa-whatsapp"></i></div>
+                        <div class="fw-bold">Receba a lista de contatos</div>
+                        <div class="small text-muted">Com nome, telefone e endereço para contato via WhatsApp</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="para-quem animate__animated animate__fadeInUp animate__delay-4s mb-5">
+            <h2 class="fw-bold mb-3 text-primary"><i class="fas fa-users"></i> Para quem é?</h2>
+            <div class="row g-4">
+                <div class="col-md-3 col-6">
+                    <div class="card border-0 shadow-sm h-100 text-center p-3">
+                        <div class="fs-2 text-success"><i class="fas fa-bullhorn"></i></div>
+                        <div class="fw-bold">Agências de Marketing</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="card border-0 shadow-sm h-100 text-center p-3">
+                        <div class="fs-2 text-primary"><i class="fas fa-user-tie"></i></div>
+                        <div class="fw-bold">Representantes Comerciais</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="card border-0 shadow-sm h-100 text-center p-3">
+                        <div class="fs-2 text-warning"><i class="fas fa-phone-volume"></i></div>
+                        <div class="fw-bold">Vendedores & SDRs</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="card border-0 shadow-sm h-100 text-center p-3">
+                        <div class="fs-2 text-danger"><i class="fas fa-user-friends"></i></div>
+                        <div class="fw-bold">Freelancers e Consultores</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="depoimentos animate__animated animate__fadeInUp animate__delay-5s mb-5">
+            <h2 class="fw-bold mb-3 text-success"><i class="fas fa-star"></i> O que dizem nossos clientes</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow h-100 p-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle me-2" width="48" height="48" alt="Cliente 1">
+                            <div>
+                                <div class="fw-bold">Carlos Henrique</div>
+                                <div class="small text-muted">Agência de Marketing</div>
+                            </div>
+                        </div>
+                        <div class="fst-italic">“Aumentei em 40% minhas vendas de serviços usando essa ferramenta. Os leads são realmente quentes!”</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow h-100 p-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" class="rounded-circle me-2" width="48" height="48" alt="Cliente 2">
+                            <div>
+                                <div class="fw-bold">Juliana Souza</div>
+                                <div class="small text-muted">Consultora Comercial</div>
+                            </div>
+                        </div>
+                        <div class="fst-italic">“Nunca foi tão fácil prospectar clientes. Faço cold call só para quem realmente tem potencial!”</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow h-100 p-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="https://randomuser.me/api/portraits/men/44.jpg" class="rounded-circle me-2" width="48" height="48" alt="Cliente 3">
+                            <div>
+                                <div class="fw-bold">Rafael Lima</div>
+                                <div class="small text-muted">Vendedor Autônomo</div>
+                            </div>
+                        </div>
+                        <div class="fst-italic">“Ferramenta intuitiva, rápida e com ótimo custo-benefício. Recomendo para todo vendedor!”</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow h-100 p-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="https://randomuser.me/api/portraits/women/43.jpg" class="rounded-circle me-2" width="48" height="48" alt="Cliente 4">
+                            <div>
+                                <div class="fw-bold">Marina Lopes</div>
+                                <div class="small text-muted">Freelancer de Vendas</div>
+                            </div>
+                        </div>
+                        <div class="fst-italic">“Consigo prospectar clientes de vários nichos e cidades. O sistema é muito prático!”</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow h-100 p-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="https://randomuser.me/api/portraits/men/76.jpg" class="rounded-circle me-2" width="48" height="48" alt="Cliente 5">
+                            <div>
+                                <div class="fw-bold">Eduardo Silva</div>
+                                <div class="small text-muted">Representante Comercial</div>
+                            </div>
+                        </div>
+                        <div class="fst-italic">“Já fechei contratos grandes graças aos leads qualificados dessa ferramenta!”</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="faq animate__animated animate__fadeInUp animate__delay-6s mb-5">
+            <h2 class="fw-bold mb-3 text-primary"><i class="fas fa-question-circle"></i> Perguntas Frequentes</h2>
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq1"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1">Preciso pagar mensalidade?</button></h2>
+                    <div id="faqCollapse1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">Não! Você só paga pelos créditos que usar, sem taxas ou cobranças recorrentes.</div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq2"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2">Os contatos são atualizados?</button></h2>
+                    <div id="faqCollapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">Sim! As buscas são feitas em tempo real no Google, trazendo contatos atualizados.</div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq3"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3">Funciona para qualquer cidade?</button></h2>
+                    <div id="faqCollapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">Sim, você pode buscar empresas em qualquer cidade do Brasil.</div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq4"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4">Recebo os contatos em qual formato?</button></h2>
+                    <div id="faqCollapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">Você pode exportar os contatos em formato CSV, pronto para usar em CRMs, WhatsApp ou planilhas.</div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq5"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse5">Posso usar os créditos quando quiser?</button></h2>
+                    <div id="faqCollapse5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">Sim! Os créditos não expiram, use quando e como quiser.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="preco-card animate__animated animate__fadeIn animate__delay-6s">
+            <h3><i class="fas fa-coins me-2"></i>Créditos</h3>
+            <div class="creditos-info mb-2">Cada busca consome <span class="badge badge-creditos">1 crédito</span> e retorna uma lista de empresas qualificadas.</div>
+            <div class="mb-2">Valores promocionais:</div>
+            <div class="fs-5 mb-2"><b>7 créditos</b> <span class="text-success">R$ 10,00</span> <span class="text-muted small">(R$ 1,50/crédito)</span></div>
+            <div class="fs-5 mb-2"><b>45 créditos</b> <span class="text-success">R$ 45,00</span> <span class="text-muted small">(R$ 1,00/crédito)</span></div>
+            <div class="fs-5 mb-2"><b>160 créditos</b> <span class="text-success">R$ 80,00</span> <span class="text-muted small">(R$ 0,50/crédito)</span></div>
+            <div class="creditos-info mt-2">Sem validade. Use quando quiser!</div>
+        </div>
+        <div class="cta-btns animate__animated animate__fadeInUp animate__delay-7s mb-4">
+            <a href="/login.html" class="btn btn-primary btn-lg"><i class="fas fa-sign-in-alt me-2"></i>Entrar</a>
+            <a href="/register.html" class="btn btn-outline-success btn-lg"><i class="fas fa-user-plus me-2"></i>Criar Conta</a>
+        </div>
+        <div class="alert alert-success fw-bold animate__animated animate__pulse animate__infinite animate__delay-8s text-center" style="font-size:1.1em;">Garanta já seus créditos e comece a prospectar clientes hoje mesmo!</div>
+    </div>
+    <footer class="text-center text-light mt-5 mb-3 animate__animated animate__fadeIn animate__delay-9s" style="font-size:1em;">
+        &copy; 2025 Ferramenta de Prospecção WhatsApp. Todos os direitos reservados.
+    </footer>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca WhatsApp Empresas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AdminLTE 3.2.0 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <!-- AdminLTE Animations (Animate.css) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <!-- AdminLTE Skins (opcional, para tema mais chamativo) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/skins/_all-skins.min.css">
+    <style>
+      body {
+        background: #f4f6f9;
+      }
+      .main-content {
+        margin-left: 260px;
+        margin-top: 80px;
+        max-width: 900px;
+      }
+      .step-input:focus {
+        border-color: #4285F4;
+        box-shadow: 0 0 0 0.2rem rgba(66,133,244,.15);
+        background: #f0f7ff;
+        transition: background 0.3s, box-shadow 0.3s;
+      }
+      .input-group-text {
+        background: #f8fafc !important;
+      }
+      .step-hint {
+        font-size: 0.95em;
+        color: #888;
+        margin-top: 2px;
+        margin-bottom: 8px;
+        margin-left: 6px;
+      }
+      .btn-primary:disabled, .btn-primary.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        filter: grayscale(0.3);
+      }
+      .btn-primary.active-glow {
+        box-shadow: 0 0 0 0.25rem rgba(66,133,244,.25);
+        animation: pulseGlow 1.5s infinite;
+      }
+      @keyframes pulseGlow {
+        0% { box-shadow: 0 0 0 0.25rem rgba(66,133,244,.25); }
+        50% { box-shadow: 0 0 0 0.6rem rgba(66,133,244,.12); }
+        100% { box-shadow: 0 0 0 0.25rem rgba(66,133,244,.25); }
+      }
+      .confetti {
+        pointer-events: none;
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        z-index: 9999;
+      }
+    </style>
+    <style>
+        body {
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+        .search-container {
+            margin-top: 8vh;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 3rem 2rem 2rem 2rem;
+            max-width: 540px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .google-logo {
+            display: block;
+            margin: 0 auto 24px auto;
+            width: 180px;
+        }
+        .results-container {
+            margin-top: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .result-card {
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            margin-bottom: 1rem;
+            padding: 1.25rem 1.5rem;
+            background: #fff;
+        }
+        .spinner-border {
+            width: 2rem;
+            height: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="notificacaoTopo" style="position:fixed;top:30px;left:50%;transform:translateX(-50%);z-index:2000;max-width:420px;width:90%;display:none;"></div>
+    <!-- AdminLTE Navbar/Topo -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light animate__animated animate__fadeInDown" style="z-index:1050;">
+      <!-- Botão para abrir/fechar sidebar -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="#" class="nav-link">Bem-vindo, <span id="navbarUsername" class="fw-bold"></span></a>
+        </li>
+      </ul>
+    </nav>
+    <div class="search-container animate__animated animate__fadeInUp">
+        <img class="google-logo animate__animated animate__bounceInDown animate__delay-1s" src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_272x92dp.png" alt="Logo Google">
+        <div class="mb-4 animate__animated animate__fadeIn animate__delay-2s">
+            <h2 class="text-center fw-bold mb-3" style="color:#4285F4; letter-spacing:-1px;">Encontre contatos de empresas no WhatsApp</h2>
+            <ol class="list-group list-group-numbered mb-3 animate__animated animate__fadeInUp animate__delay-2s" style="background:transparent;">
+                <li class="list-group-item border-0 ps-0" style="background:transparent;">Digite o <span class="fw-bold text-primary">nome da cidade</span> desejada</li>
+                <li class="list-group-item border-0 ps-0" style="background:transparent;">Digite o <span class="fw-bold text-success">nicho da empresa</span> (ex: pizzaria, salão de beleza)</li>
+                <li class="list-group-item border-0 ps-0" style="background:transparent;">Clique em <span class="fw-bold text-danger">Pesquisar</span> para extrair a lista de contatos direto do Google</li>
+            </ol>
+            <div class="alert alert-info text-center animate__animated animate__fadeIn animate__delay-3s mb-0" style="font-size:1.08em;">
+                <i class="fas fa-info-circle me-2"></i>Você receberá uma lista de empresas com telefone, nome e endereço para contato via WhatsApp.
+            </div>
+        </div>
+        <div class="mb-3 d-flex justify-content-between align-items-center animate__animated animate__fadeIn animate__delay-4s">
+            <span id="creditos" class="badge bg-success" style="font-size:1.1em;"><i class="fas fa-coins me-1"></i>Créditos: ...</span>
+            <button id="logoutBtn" class="btn btn-outline-secondary btn-sm"><i class="fas fa-sign-out-alt me-1"></i>Sair</button>
+        </div>
+        <form id="searchForm" class="animate__animated animate__fadeInUp animate__delay-5s">
+            <div class="mb-3 animate__animated animate__fadeInLeft animate__delay-6s">
+                <label for="cidade" class="form-label fw-semibold">1. Cidade</label>
+                <div class="input-group input-group-lg shadow-sm">
+                    <span class="input-group-text bg-light"><i class="fas fa-city text-primary"></i></span>
+                    <input type="text" class="form-control form-control-lg step-input" id="cidade" placeholder="Ex: Belo Horizonte" required autofocus>
+                </div>
+                <div class="step-hint">Digite o nome da cidade onde deseja buscar empresas.</div>
+            </div>
+            <div class="mb-3 animate__animated animate__fadeInRight animate__delay-7s">
+                <label for="nicho" class="form-label fw-semibold">2. Nicho da empresa</label>
+                <div class="input-group input-group-lg shadow-sm">
+                    <span class="input-group-text bg-light"><i class="fas fa-briefcase text-success"></i></span>
+                    <input type="text" class="form-control form-control-lg step-input" id="nicho" placeholder="Ex: Pizzaria, Salão de Beleza" required>
+                </div>
+                <div class="step-hint">Exemplo: pizzaria, salão de beleza, pet shop...</div>
+            </div>
+            <button type="submit" id="pesquisarBtn" class="btn btn-primary btn-lg w-100 animate__animated animate__pulse animate__infinite animate__delay-8s" style="font-size:1.3em;"><i class="fas fa-search me-2"></i>PESQUISAR</button>
+        </form>
+        <div class="d-flex gap-2 mt-3">
+            <button id="comprarCreditosBtn" class="btn btn-warning btn-sm flex-fill">Comprar Créditos</button>
+            <button id="exportarCsvBtn" class="btn btn-success btn-sm flex-fill">Exportar CSV</button>
+        </div>
+        <div id="loading" class="text-center mt-4" style="display:none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Buscando...</span>
+            </div>
+            <div class="mt-2">Buscando empresas, aguarde...</div>
+        </div>
+        <div id="error" class="alert alert-danger mt-4" style="display:none;"></div>
+    </div>
+    <div class="results-container" id="results"></div>
+
+    <script>
+        // --- Exibir créditos do localStorage na badge do dashboard ---
+        document.addEventListener('DOMContentLoaded', function() {
+            let creditos = localStorage.getItem('creditos');
+            document.getElementById('creditos').innerHTML = `<i class="fas fa-coins me-1"></i>Créditos: ${creditos ? creditos : 0}`;
+        });
+        // --- Preencher username na navbar ---
+        // Botão logout do menu lateral
+        document.addEventListener('DOMContentLoaded', function() {
+            var btn = document.getElementById('sidebarLogoutBtn');
+            if (btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+            }
+        });
+        (function preencherNavbarUsername() {
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.querySelectorAll('#navbarUsername').forEach(el => el.textContent = username);
+            }
+        })();
+
+        // --- Autenticação e controle de sessão ---
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+        function setToken(token) {
+            localStorage.setItem('token', token);
+        }
+        function setUsername(username) {
+            localStorage.setItem('username', username);
+        }
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/login.html';
+        }
+        document.getElementById('logoutBtn').onclick = logout;
+
+        // Redireciona para login se não autenticado
+        const token = getToken();
+        console.log('Verificando autenticação. Token encontrado:', token);
+        if (!token) {
+            console.log('Nenhum token encontrado. Redirecionando para login...');
+            window.location.href = '/login.html';
+        } else {
+            console.log('Token válido encontrado. Carregando aplicação...');
+            // Garante que o nome de usuário está visível na navbar
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.querySelectorAll('#navbarUsername').forEach(el => el.textContent = username);
+            }
+        }
+
+        // --- Atualiza créditos ---
+        async function atualizarCreditos() {
+            // Faz uma requisição dummy só para pegar créditos
+            const res = await fetch('/buscar-whatsapp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': getToken()
+                },
+                body: JSON.stringify({ termo_busca: 'dummy', user_id: 'web-ui' })
+            });
+            if (res.status === 402) {
+                document.getElementById('creditos').textContent = 'Créditos: 0';
+            } else if (res.ok) {
+                const data = await res.json();
+                document.getElementById('creditos').textContent = 'Créditos: ' + (data.credits ?? '...');
+            } else {
+                document.getElementById('creditos').textContent = 'Créditos: ...';
+            }
+        }
+        atualizarCreditos();
+
+        // --- Compra de créditos (simulação) ---
+        document.getElementById('comprarCreditosBtn').onclick = async function() {
+            const qtd = prompt('Quantos créditos deseja comprar?');
+            if (!qtd || isNaN(qtd) || qtd <= 0) return;
+            const res = await fetch('/comprar-creditos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': getToken()
+                },
+                body: JSON.stringify({ quantidade: qtd })
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('Compra realizada com sucesso! Créditos: ' + data.credits);
+                atualizarCreditos();
+            } else {
+                alert('Erro ao comprar créditos.');
+            }
+        };
+
+        // --- Exportação CSV ---
+        document.getElementById('exportarCsvBtn').onclick = async function() {
+            const res = await fetch('/exportar-csv?token=' + getToken());
+            if (res.ok) {
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'contatos.csv';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            } else {
+                alert('Não foi possível exportar. Faça uma busca primeiro.');
+            }
+        };
+
+        // --- Busca principal ---
+        const form = document.getElementById('searchForm');
+        const loading = document.getElementById('loading');
+        const resultsDiv = document.getElementById('results');
+        const errorDiv = document.getElementById('error');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            resultsDiv.innerHTML = '';
+            errorDiv.style.display = 'none';
+            loading.style.display = 'block';
+
+            // Verifica créditos antes de buscar
+            let creditos = Number(localStorage.getItem('creditos'));
+            if (isNaN(creditos) || creditos <= 0) {
+                loading.style.display = 'none';
+                errorDiv.innerHTML = '<div class="alert alert-danger">Você está sem créditos!<br><button class="btn btn-warning mt-2" onclick="window.location.href=\'/creditos.html\'">Comprar Créditos</button></div>';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            // Desconta 1 crédito imediatamente
+            creditos = creditos - 1;
+            localStorage.setItem('creditos', creditos);
+            document.getElementById('creditos').innerHTML = `<i class="fas fa-coins me-1"></i>Créditos: ${creditos}`;
+            // Notificação amigável de início de extração no topo
+            let notif = document.getElementById('notificacaoTopo');
+            notif.innerHTML = `<div class='alert alert-info text-center animate__animated animate__fadeInDown' style='margin-bottom:0;font-size:1.1em;'>A extração foi iniciada! O resultado pode levar de <b>3 a 5 minutos</b> para aparecer aqui.</div>`;
+            notif.style.display = 'block';
+            setTimeout(() => { notif.style.display = 'none'; notif.innerHTML = ''; }, 10000);
+
+            const cidade = document.getElementById('cidade').value.trim();
+            const nicho = document.getElementById('nicho').value.trim();
+            if (!cidade || !nicho) {
+                loading.style.display = 'none';
+                errorDiv.textContent = 'Preencha todos os campos.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            const termo_busca = `${nicho} ${cidade}`;
+            const user_id = 'web-ui';
+
+            try {
+                const response = await fetch('/buscar-whatsapp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': getToken()
+                    },
+                    body: JSON.stringify({ termo_busca, user_id })
+                });
+                loading.style.display = 'none';
+                if (response.status === 401) {
+                    logout();
+                    return;
+                }
+                if (response.status === 402) {
+                    errorDiv.textContent = 'Créditos insuficientes. Compre mais créditos para continuar.';
+                    errorDiv.style.display = 'block';
+                    atualizarCreditos();
+                    return;
+                }
+                if (!response.ok) {
+                    const err = await response.json();
+                    errorDiv.textContent = err.erro || 'Erro ao buscar empresas.';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+                const data = await response.json();
+                atualizarCreditos();
+                if (!data.estabelecimentos || data.estabelecimentos.length === 0) {
+                    resultsDiv.innerHTML = '<div class="alert alert-warning">Nenhum resultado encontrado.</div>';
+                    return;
+                }
+                resultsDiv.innerHTML = data.estabelecimentos.map(est => `
+                    <div class="result-card">
+                        <h5 class="mb-1">${est.nome || est.nomeEmpresa || 'Nome não informado'}</h5>
+                        <div><b>Telefone/WhatsApp:</b> ${est.telefone || 'Não encontrado'}</div>
+                        <div><b>Endereço:</b> ${est.endereco || 'Não informado'}</div>
+                        <div><b>Categoria:</b> ${est.categoria || 'Não informado'}</div>
+                        <div><b>Horário:</b> ${est.horario || 'Não informado'}</div>
+                        <div><b>Nota:</b> ${est.avaliacao || 'N/A'} (${est.numAvaliacoes || 0} avaliações)</div>
+                        <div><a href="${est.link || '#'}" target="_blank" rel="noopener">Ver no Google Maps</a></div>
+                    </div>
+                `).join('');
+                atualizarCreditos();
+            } catch (err) {
+                loading.style.display = 'none';
+                errorDiv.textContent = 'Erro ao buscar empresas.';
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+    <!-- AdminLTE Navbar/Topo -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light animate__animated animate__fadeInDown" style="z-index:1050;">
+      <!-- Botão para abrir/fechar sidebar -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="#" class="nav-link">Bem-vindo, <span id="navbarUsername" class="fw-bold"></span></a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- AdminLTE Sidebar/Menu -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4 animate__animated animate__fadeInLeft" style="position:fixed;top:0;left:0;height:100vh;z-index:1040;width:250px;">
+      <a href="#" class="brand-link animate__animated animate__pulse animate__infinite">
+        <span class="brand-text font-weight-light"><i class="fas fa-search animate__animated animate__tada animate__infinite"></i> Busca Admin</span>
+      </a>
+      <div class="sidebar">
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column animate__animated animate__fadeInLeftBig" data-widget="treeview" role="menu" data-accordion="false">
+            <li class="nav-item">
+              <a href="/historico.html" class="nav-link animate__animated animate__heartBeat animate__delay-1s">
+                <i class="nav-icon fas fa-history"></i>
+                <p>Histórico de Buscas</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/index.html" class="nav-link animate__animated animate__bounceIn">
+                <i class="nav-icon fas fa-search"></i>
+                <p>Nova Busca</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/creditos.html" class="nav-link animate__animated animate__flash animate__delay-2s">
+                <i class="nav-icon fas fa-coins"></i>
+                <p>Comprar Créditos</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" id="sidebarLogoutBtn" class="nav-link animate__animated animate__rubberBand animate__delay-3s">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <p>Sair</p>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- AdminLTE JS e dependências -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+  </body>
+</html>
